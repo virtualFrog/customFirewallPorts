@@ -3,6 +3,7 @@ FROM lamw/vibauthor
 # Due to https://stackoverflow.com/a/49026601
 RUN rpm --rebuilddb
 RUN yum clean all
+RUN yum install -y unzip zip
 RUN yum update -y nss curl libcurl;yum clean all
 
 # Copy ghettoVCB VIB build script
