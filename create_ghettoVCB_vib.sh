@@ -5,7 +5,7 @@ set -euo pipefail
 CUSTOM_VIB_TEMP_DIR=/tmp/vib-temp-$$
 CUSTOM_VIB_NAME=customfirewall
 CUSTOM_VIB_FILE_OFFLINE_BUNDLE_NAME=customfirewall-offline-bundle.zip
-CUSTOM_VIB_VERSION="1.0.0"
+CUSTOM_VIB_VERSION="1.0.1"
 CUSTOM_VIB_VENDOR="soulTec"
 CUSTOM_VIB_VENDOR_URL="https://soulTec.ch"
 CUSTOM_VIB_SUMMARY="Opens a specified Port for outgoing connections"
