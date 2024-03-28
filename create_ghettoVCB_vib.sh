@@ -134,11 +134,11 @@ sed -i "/<releaseDate>/i\    <componentNameSpec name=\"${CUSTOM_VIB_NAME}\" uiSt
 sed -i "/<releaseDate>/i\    <componentVersionSpec uiString=\"${CUSTOM_VIB_VERSION}\" version=\"${CUSTOM_VIB_VERSION}\"\/>" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/vmware.xml
 sed -i "s/version=\"5./version=\"${CUSTOM_VIB_ESXI_COMPAT}./g" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/vmware.xml
 sed -i "s|<kbUrl>.*|<kbUrl>${CUSTOM_VIB_VENDOR_URL}</kbUrl>|g" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/vmware.xml
-sed -i "s|<releaseDate>|<componentNameSpec name=\"${CUSTOM_VIB_NAME}\" uiString=\"${CUSTOM_VIB_VSPHERE_UI_LABEL}\"/>&|" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/bulletins/dummy-esxi-reboot.xml
-sed -i "s|<releaseDate>|<componentVersionSpec uiString=\"${CUSTOM_VIB_VERSION}\" version=\"${CUSTOM_VIB_VERSION}\"/>&|" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/bulletins/dummy-esxi-reboot.xml
-sed -i "s/5.\*/${CUSTOM_VIB_ESXI_COMPAT}.\*/g" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/bulletins/dummy-esxi-reboot.xml
-sed -i "s|<kbUrl>unknown</kbUrl>|<kbUrl>${CUSTOM_VIB_VENDOR_URL}</kbUrl>|g" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/bulletins/dummy-esxi-reboot.xml
-sed -i "s|</system-requires>|<softwarePlatform version=\"${CUSTOM_VIB_ESXI_COMPAT}.*\" locale=\"\" productLineID=\"embeddedEsx\"/>&|" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/vibs/dummy-esxi-reboot-*.xml
+sed -i "s|<releaseDate>|<componentNameSpec name=\"${CUSTOM_VIB_NAME}\" uiString=\"${CUSTOM_VIB_VSPHERE_UI_LABEL}\"/>&|" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/bulletins/customfirewall.xml
+sed -i "s|<releaseDate>|<componentVersionSpec uiString=\"${CUSTOM_VIB_VERSION}\" version=\"${CUSTOM_VIB_VERSION}\"/>&|" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/bulletins/customfirewall.xml
+sed -i "s/5.\*/${CUSTOM_VIB_ESXI_COMPAT}.\*/g" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/bulletins/customfirewall.xml
+sed -i "s|<kbUrl>unknown</kbUrl>|<kbUrl>${CUSTOM_VIB_VENDOR_URL}</kbUrl>|g" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/bulletins/customfirewall.xml
+sed -i "s|</system-requires>|<softwarePlatform version=\"${CUSTOM_VIB_ESXI_COMPAT}.*\" locale=\"\" productLineID=\"embeddedEsx\"/>&|" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/vibs/customfirewall-*.xml
 cd ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata
 zip -r ../metadata.zip bulletins/ vendor-index.xml vibs/ vmware.xml
 cd ..
