@@ -5,6 +5,7 @@ set -euo pipefail
 CUSTOM_VIB_TEMP_DIR=/tmp/vib-temp-$$
 CUSTOM_VIB_NAME=customfirewall
 CUSTOM_VIB_FILE_OFFLINE_BUNDLE_NAME=customfirewall-offline-bundle.zip
+CUSTOM_VIB_OFFLINE_BUNDLE_NAME=${CUSTOM_VIB_FILE_OFFLINE_BUNDLE_NAME}
 CUSTOM_VIB_VERSION="1.0.1"
 CUSTOM_VIB_VENDOR="soulTec"
 CUSTOM_VIB_VENDOR_URL="https://soulTec.ch"
@@ -13,6 +14,9 @@ CUSTOM_VIB_DESCRIPTION="Creates a new firewall rule to enable outgoing connectio
 CUSTOM_VIB_BUILD_DATE=$(date '+%Y-%m-%dT%H:%I:%S')
 CUSTOM_VIB_ESXI_COMPAT=8
 CUSTOM_VIB_FIREWALL_PORT=51402
+
+COLOR='\033[0;32m'
+NOCOLOR='\033[0m'
 
 # clean up any prior builds
 CUSTOM_VIB_FILE_NAME=${CUSTOM_VIB_NAME}.vib
@@ -113,6 +117,34 @@ ar r ${CUSTOM_VIB_FILE_NAME} ${VIB_DESC_FILE} ${CUSTOM_VIB_TEMP_DIR}/sig.pkcs7 $
 
 # Create offline bundle
 PYTHONPATH=/opt/vmware/vibtools-6.0.0-847598/bin python -c "import vibauthorImpl; vibauthorImpl.CreateOfflineBundle(\"${CUSTOM_VIB_FILE_NAME}\", \"${CUSTOM_VIB_FILE_OFFLINE_BUNDLE_NAME}\", True)"
+
+# re-author offline bundle to be component compliant vs bulletin for ESXi 7.x and later
+echo -e "${COLOR}Creating compliant offline bundle for Dummy ESXi Reboot VIB ...${NOCOLOR}"
+CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY=${CUSTOM_VIB_OFFLINE_BUNDLE_NAME%.*}
+unzip ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME} -d ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}
+rm -f ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME}
+chmod 644 -R ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}
+sed -i 's/Unknown/WIL/g' ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/index.xml
+sed -i "s/5.\*/${CUSTOM_VIB_ESXI_COMPAT}.\*/g" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/vendor-index.xml
+unzip ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata.zip -d ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata
+rm -f ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata.zip
+sed -i "s/5.\*/${CUSTOM_VIB_ESXI_COMPAT}.\*/g" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/vendor-index.xml
+sed -i "/<releaseDate>/i\    <componentNameSpec name=\"${CUSTOM_VIB_NAME}\" uiString=\"${CUSTOM_VIB_VSPHERE_UI_LABEL}\"\/>" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/vmware.xml
+sed -i "/<releaseDate>/i\    <componentVersionSpec uiString=\"${CUSTOM_VIB_VERSION}\" version=\"${CUSTOM_VIB_VERSION}\"\/>" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/vmware.xml
+sed -i "s/version=\"5./version=\"${CUSTOM_VIB_ESXI_COMPAT}./g" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/vmware.xml
+sed -i "s|<kbUrl>.*|<kbUrl>${CUSTOM_VIB_VENDOR_URL}</kbUrl>|g" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/vmware.xml
+sed -i "s|<releaseDate>|<componentNameSpec name=\"${CUSTOM_VIB_NAME}\" uiString=\"${CUSTOM_VIB_VSPHERE_UI_LABEL}\"/>&|" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/bulletins/dummy-esxi-reboot.xml
+sed -i "s|<releaseDate>|<componentVersionSpec uiString=\"${CUSTOM_VIB_VERSION}\" version=\"${CUSTOM_VIB_VERSION}\"/>&|" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/bulletins/dummy-esxi-reboot.xml
+sed -i "s/5.\*/${CUSTOM_VIB_ESXI_COMPAT}.\*/g" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/bulletins/dummy-esxi-reboot.xml
+sed -i "s|<kbUrl>unknown</kbUrl>|<kbUrl>${CUSTOM_VIB_VENDOR_URL}</kbUrl>|g" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/bulletins/dummy-esxi-reboot.xml
+sed -i "s|</system-requires>|<softwarePlatform version=\"${CUSTOM_VIB_ESXI_COMPAT}.*\" locale=\"\" productLineID=\"embeddedEsx\"/>&|" ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata/vibs/dummy-esxi-reboot-*.xml
+cd ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}/metadata
+zip -r ../metadata.zip bulletins/ vendor-index.xml vibs/ vmware.xml
+cd ..
+rm -rf metadata
+zip -r ../${CUSTOM_VIB_OFFLINE_BUNDLE_NAME} index.xml metadata.zip vendor-index.xml vib20/
+cd ..
+rm -rf ${CUSTOM_VIB_OFFLINE_BUNDLE_NAME_EXTRACT_DIRECTORY}
 
 # Show details of VIB that was just created
 vibauthor -i -v ${CUSTOM_VIB_FILE_NAME}
