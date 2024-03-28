@@ -33,7 +33,7 @@ cat > ${CUSTOM_VIB_BIN_DIR}/customfirewall.xml <<EOM
 <!-- Firewall configuration information for custom firewall port -->
 <ConfigRoot>
 <service>
-<id>custom-firewallport</id>
+<id>${CUSTOM_VIB_NAME}</id>
 <rule id='0000'>
 <direction>outbound</direction>
 <protocol>tcp</protocol>
