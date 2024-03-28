@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -euo pipefail
+CUSTOM_VIB_FIREWALL_PORT=51402
 
 CUSTOM_VIB_TEMP_DIR=/tmp/vib-temp-$$
 CUSTOM_VIB_NAME=customfirewall
@@ -10,11 +11,11 @@ CUSTOM_VIB_VERSION="1.0.1"
 CUSTOM_VIB_VENDOR="soulTec"
 CUSTOM_VIB_VENDOR_URL="https://soulTec.ch"
 CUSTOM_VIB_SUMMARY="Opens a specified Port for outgoing connections"
-CUSTOM_VIB_DESCRIPTION="Creates a new firewall rule to enable outgoing connections"
+CUSTOM_VIB_DESCRIPTION="Creates a new firewall rule to enable outgoing connections on port ${CUSTOM_VIB_FIREWALL_PORT}"
 CUSTOM_VIB_BUILD_DATE=$(date '+%Y-%m-%dT%H:%I:%S')
 CUSTOM_VIB_VSPHERE_UI_LABEL="soulTec Custom Firewall Port"
 CUSTOM_VIB_ESXI_COMPAT=8
-CUSTOM_VIB_FIREWALL_PORT=51402
+
 
 COLOR='\033[0;32m'
 NOCOLOR='\033[0m'
