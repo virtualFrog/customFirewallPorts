@@ -12,6 +12,7 @@ CUSTOM_VIB_VENDOR_URL="https://soulTec.ch"
 CUSTOM_VIB_SUMMARY="Opens a specified Port for outgoing connections"
 CUSTOM_VIB_DESCRIPTION="Creates a new firewall rule to enable outgoing connections"
 CUSTOM_VIB_BUILD_DATE=$(date '+%Y-%m-%dT%H:%I:%S')
+CUSTOM_VIB_VSPHERE_UI_LABEL="soulTec Custom Firewall Port"
 CUSTOM_VIB_ESXI_COMPAT=8
 CUSTOM_VIB_FIREWALL_PORT=51402
 
