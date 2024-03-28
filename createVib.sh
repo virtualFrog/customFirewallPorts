@@ -4,6 +4,7 @@ set -euo pipefail
 
 CUSTOM_VIB_TEMP_DIR=/tmp/vib-temp-$$
 CUSTOM_VIB_NAME=customfirewall
+CUSTOM_VIB_FILE_OFFLINE_BUNDLE_NAME=customfirewall-offline-bundle.zip
 CUSTOM_VIB_VERSION="1.0.0"
 CUSTOM_VIB_VENDOR="soulTec"
 CUSTOM_VIB_VENDOR_URL="https://soulTec.ch"
@@ -108,3 +109,8 @@ __VIB_DESC__
 touch ${CUSTOM_VIB_TEMP_DIR}/sig.pkcs7
 ar r ${CUSTOM_VIB_FILE_NAME} ${VIB_DESC_FILE} ${CUSTOM_VIB_TEMP_DIR}/sig.pkcs7 ${CUSTOM_VIB_TEMP_DIR}/payload1
 
+# Create offline bundle
+PYTHONPATH=/opt/vmware/vibtools-6.0.0-847598/bin python -c "import vibauthorImpl; vibauthorImpl.CreateOfflineBundle(\"${CUSTOM_VIB_FILE_NAME}\", \"${CUSTOM_VIB_FILE_OFFLINE_BUNDLE_NAME}\", True)"
+
+# Show details of VIB that was just created
+vibauthor -i -v ${CUSTOM_VIB_FILE_NAME}
