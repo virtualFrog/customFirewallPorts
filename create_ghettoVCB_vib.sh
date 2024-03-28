@@ -11,6 +11,7 @@ CUSTOM_VIB_VENDOR_URL="https://soulTec.ch"
 CUSTOM_VIB_SUMMARY="Opens a specified Port for outgoing connections"
 CUSTOM_VIB_DESCRIPTION="Creates a new firewall rule to enable outgoing connections"
 CUSTOM_VIB_BUILD_DATE=$(date '+%Y-%m-%dT%H:%I:%S')
+CUSTOM_VIB_ESXI_COMPAT=8
 CUSTOM_VIB_FIREWALL_PORT=51402
 
 # clean up any prior builds
@@ -85,6 +86,7 @@ cat > ${VIB_DESC_FILE} << __VIB_DESC__
   </software-tags>
   <system-requires>
     <maintenance-mode>false</maintenance-mode>
+    <softwarePlatform version="${CUSTOM_VIB_ESXI_COMPAT}.*" locale="" productLineID="embeddedEsx" />
   </system-requires>
   <file-list>
 ${PAYLOAD_FILES}
